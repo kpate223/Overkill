@@ -7,18 +7,17 @@
 
 #include <Manipulator.h>
 
-Manipulator::Manipulator()
+Manipulator::Manipulator(Joystick *joystick)
 {
-#if 0
-	baseMotor = std::make_shared<Victor>();
-	shoulderMotor1 = std::make_shared<Victor>();
-	shoulderMotor2 = std::make_shared<Victor>();
-	elbowMotor = std::make_shared<Victor>();
-	pitchMotor = std::make_shared<Victor>();
-	yawMotor = std::make_shared<Victor>();
-	rollMotor = std::make_shared<Victor>();
-	gripperMotor = std::make_shared<Victor>();
-#endif
+	for(unsigned i = 0; i < ManipulatorMotors::NUM_MANIPULATOR_MOTORS; ++i)
+	{
+		motorControllers[i] = std::make_shared<Victor>(manipulatorMotorPins[i]);
+		potentiometers[i] = std::make_shared<AnalogPotentiometer>(manipulatorPotentiometerPins[i]);
+	}
+
+	this->joystick = joystick;
+
+	lastRunTimestamp = getTimestampMicros() - manipulatorPeriod;
 }
 
 Manipulator::~Manipulator()
@@ -26,3 +25,12 @@ Manipulator::~Manipulator()
 	// TODO Auto-generated destructor stub
 }
 
+void Manipulator::update()
+{
+	uint32_t timestampMicros = getTimestampMicros();
+
+	if(timestampMicros - lastRunTimestamp < manipulatorPeriod)
+		return;
+
+	lastRunTimestamp = timestampMicros;
+}

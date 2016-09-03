@@ -8,34 +8,24 @@
 #ifndef SRC_MANIPULATOR_H_
 #define SRC_MANIPULATOR_H_
 
-#include "WPILib.h"
+#include <Constants.h>
 
 class Manipulator
 {
-		// 8 motors
 	public:
-		Manipulator();
+		Manipulator(Joystick *joystick);
 		virtual ~Manipulator();
+		void update();
 
 	protected:
 
 	private:
-		std::shared_ptr<Victor> baseMotor;
-		std::shared_ptr<Victor> shoulderMotor1;
-		std::shared_ptr<Victor> shoulderMotor2;
-		std::shared_ptr<Victor> elbowMotor;
-		std::shared_ptr<Victor> pitchMotor;
-		std::shared_ptr<Victor> yawMotor;
-		std::shared_ptr<Victor> rollMotor;
-		std::shared_ptr<Victor> gripperMotor;
+		std::shared_ptr<Victor> motorControllers[ManipulatorMotors::NUM_MANIPULATOR_MOTORS];
+		std::shared_ptr<AnalogPotentiometer> potentiometers[ManipulatorMotors::NUM_MANIPULATOR_MOTORS];
 
-		std::shared_ptr<AnalogPotentiometer> basePotentiometer;
-		std::shared_ptr<AnalogPotentiometer> shoulderPotentiometer;
-		std::shared_ptr<AnalogPotentiometer> elbowPotentiometer;
-		std::shared_ptr<AnalogPotentiometer> pitchPotentiometer;
-		std::shared_ptr<AnalogPotentiometer> yawPotentiometer;
-		std::shared_ptr<AnalogPotentiometer> rollPotentiometer;
-		std::shared_ptr<AnalogPotentiometer> gripperPotentiometers;
+		uint32_t lastRunTimestamp;
+
+		Joystick *joystick;
 };
 
 #endif /* SRC_MANIPULATOR_H_ */
