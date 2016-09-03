@@ -43,7 +43,7 @@ class Drive
 
 		const float maxEncoderVal = 125;
 
-		const double kIntegral = 0.002;
+		const double kIntegral = 0.003;
 
 		uint32_t lastRunTimestamp;
 

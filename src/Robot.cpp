@@ -25,7 +25,7 @@ public:
 
 	void Disabled()
 	{
-
+		drive.reset();
 	}
 
 	void OperatorControl()
