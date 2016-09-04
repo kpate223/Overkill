@@ -11,18 +11,16 @@
 #include <Constants.h>
 
 /*
- * Encoder pulses per revolution = 7
- * x4 = 28
+ * Encoder counts per revolution = 7
+ * x4 = 28 counts/rev
  * Gear ratio = 71
- * Pulses per rotation of output shaft = 28 * 71 = 1988
- * Wheel circumference = 0.67 m
- * Pulses per meter = 2970 pulses/m
- * By measuring pulses from encoder, we can determine speed and distance.
+ * Counts per rotation of output shaft = 28 * 71 = 1988 counts/rev
+ * Wheel circumference = 0.67 m/rev
+ * Counts per meter = 2970 counts/m
  *
  * Motor no load speed = 75 rpm
- * Wheel no load velocity = (75 / 60) * 0.67 m = 0.84 m/s <- MAX SPEED = 2500 pulses/s
- * Most likely velocity is 0.6 m/s
- *
+ * Wheel no load velocity = (75 / 60) * 0.67 m = 0.84 m/s <- MAX SPEED CAPACITY = 2500 counts/s
+ * Max speed from competition rules = 3 km/hr = 0.83 m/s <- CAPPED MAX SPEED = 2400 counts/s
  */
 
 class Drive
@@ -41,7 +39,7 @@ class Drive
 
 		float lastPowerVals[DriveMotors::NUM_DRIVE_MOTORS];
 
-		const float maxEncoderVal = 125;
+		const uint32_t maxSpeed = (uint32_t) 2400 * drivePeriod / 1000000; // Encoder counts per loop period
 
 		const double kIntegral = 0.003;
 

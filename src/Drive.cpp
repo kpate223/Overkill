@@ -56,17 +56,14 @@ void Drive::update()
 
 	if(halfSpeed)
 	{
-		leftSpeed = map(leftSpeed, -1, 1, -maxEncoderVal / 2, maxEncoderVal / 2);
-		rightSpeed = map(rightSpeed, -1, 1, -maxEncoderVal / 2, maxEncoderVal / 2);
+		leftSpeed = map(leftSpeed, -1, 1, -maxSpeed / 2, maxSpeed / 2);
+		rightSpeed = map(rightSpeed, -1, 1, -maxSpeed / 2, maxSpeed / 2);
 	}
 	else
 	{
-		leftSpeed = map(leftSpeed, -1, 1, -maxEncoderVal, maxEncoderVal);
-		rightSpeed = map(rightSpeed, -1, 1, -maxEncoderVal, maxEncoderVal);
+		leftSpeed = map(leftSpeed, -1, 1, -maxSpeed, maxSpeed);
+		rightSpeed = map(rightSpeed, -1, 1, -maxSpeed, maxSpeed);
 	}
-
-	std::cout << "leftSpeed " << leftSpeed << std::endl;
-	std::cout << "rightSpeed" << rightSpeed << std::endl;
 
 	int encoderVals[DriveMotors::NUM_DRIVE_MOTORS];
 	int motorSpeeds[DriveMotors::NUM_DRIVE_MOTORS];
@@ -82,18 +79,8 @@ void Drive::update()
 	for(unsigned i = 0; i < DriveMotors::NUM_DRIVE_MOTORS; ++i)
 	{
 		motorSpeeds[i] = encoderVals[i] - lastEncoderVals[i];
-//		std::cout << "speed[" << i << "] = " << motorSpeeds[i] << std::endl;
-
 		lastEncoderVals[i] = encoderVals[i];
-
-		if(i <= DriveMotors::RightRearMotor)
-		{
-			speedErrorValues[i] = rightSpeed - motorSpeeds[i];
-		}
-		else
-		{
-			speedErrorValues[i] = leftSpeed - motorSpeeds[i];
-		}
+//		std::cout << "speed[" << i << "] = " << motorSpeeds[i] << std::endl;
 	}
 
 	if(!joystick->GetRawButton(JoystickButtons::DriveOverride))
@@ -103,6 +90,15 @@ void Drive::update()
 
 	for(unsigned i = 0; i < DriveMotors::NUM_DRIVE_MOTORS; ++i)
 	{
+		if(i <= DriveMotors::RightRearMotor)
+		{
+			speedErrorValues[i] = rightSpeed - motorSpeeds[i];
+		}
+		else
+		{
+			speedErrorValues[i] = leftSpeed - motorSpeeds[i];
+		}
+
 		lastPowerVals[i] += speedErrorValues[i] * kIntegral;
 		lastPowerVals[i] = constrain(lastPowerVals[i], -1, 1);
 		motorControllers[i]->Set(lastPowerVals[i]);
