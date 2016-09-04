@@ -34,3 +34,8 @@ void Manipulator::update()
 
 	lastRunTimestamp = timestampMicros;
 }
+
+void Manipulator::reset()
+{
+	// TODO Add reset code
+}

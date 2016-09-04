@@ -85,7 +85,27 @@ void Drive::update()
 
 	if(!joystick->GetRawButton(JoystickButtons::DriveOverride))
 	{
-
+		// Perform motor saturation compensation by changing the desired speeds if a motor is saturated
+		float adjLeftSpeed = leftSpeed, adjRightSpeed = rightSpeed;
+		for(unsigned i = 0; i < DriveMotors::NUM_DRIVE_MOTORS; ++i)
+		{
+			if(i <= DriveMotors::RightRearMotor)
+			{
+				if(((adjRightSpeed > motorSpeeds[i]) && (lastPowerVals[i] > 1)) ||
+						((adjRightSpeed < motorSpeeds[i]) && (lastPowerVals[i] < -1)))
+					adjRightSpeed = motorSpeeds[i];
+			}
+			else
+			{
+				if(((adjLeftSpeed > motorSpeeds[i]) && (lastPowerVals[i] > 1)) ||
+						((adjLeftSpeed < motorSpeeds[i]) && (lastPowerVals[i] < -1)))
+					adjLeftSpeed = motorSpeeds[i];
+			}
+		}
+		float ratio = std::min(adjLeftSpeed / leftSpeed, adjRightSpeed / rightSpeed);
+		ratio = constrain(ratio, -1, 1);
+		leftSpeed *= ratio;
+		rightSpeed *= ratio;
 	}
 
 	for(unsigned i = 0; i < DriveMotors::NUM_DRIVE_MOTORS; ++i)
@@ -100,8 +120,8 @@ void Drive::update()
 		}
 
 		lastPowerVals[i] += speedErrorValues[i] * kIntegral;
-		lastPowerVals[i] = constrain(lastPowerVals[i], -1, 1);
-		motorControllers[i]->Set(lastPowerVals[i]);
+		lastPowerVals[i] = constrain(lastPowerVals[i], -1.1, 1.1); // Allow above 1 to see if motor is saturating
+		motorControllers[i]->Set(constrain(lastPowerVals[i], -1, 1));
 	}
 }
 

@@ -16,6 +16,7 @@ class Manipulator
 		Manipulator(Joystick *joystick);
 		virtual ~Manipulator();
 		void update();
+		void reset();
 
 	protected:
 

@@ -25,7 +25,12 @@ public:
 
 	void Disabled()
 	{
-		drive.reset();
+		while (IsDisabled())
+		{
+			safety.update();
+			drive.reset();
+			manipulator.reset();
+		}
 	}
 
 	void OperatorControl()
@@ -34,7 +39,7 @@ public:
 		{
 			safety.update();
 			drive.update();
-			//manipulator.update();
+			manipulator.update();
 		}
 	}
 };
