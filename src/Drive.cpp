@@ -118,6 +118,8 @@ void Drive::update()
 		lastPowerVals[i] += speedErrorValues[i] * kIntegral;
 		lastPowerVals[i] = constrain(lastPowerVals[i], -1.1, 1.1); // Allow above 1 to see if motor is saturating
 		motorControllers[i]->Set(constrain(lastPowerVals[i], -1, 1));
+
+		std::cout << "Motor " << i << " Current = " << pdp->GetCurrent(drivePowerChannels[i]) << std::endl;
 	}
 }
 
