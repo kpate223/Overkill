@@ -9,7 +9,7 @@
 
 #include <iostream>
 
-Drive::Drive(Joystick *joystick)
+Drive::Drive(Joystick *joystick, PowerDistributionPanel *pdp)
 {
 	for(unsigned i = 0; i < DriveMotors::NUM_DRIVE_MOTORS; ++i)
 	{
@@ -17,15 +17,9 @@ Drive::Drive(Joystick *joystick)
 		encoders[i] = std::make_shared<Encoder>(driveEncoderPins[i][0], driveEncoderPins[i][1]);
 	}
 
-	lastRunTimestamp = getTimestampMicros() - drivePeriod;
-
-	for(unsigned i = 0; i < DriveMotors::NUM_DRIVE_MOTORS; ++i)
-	{
-		lastPowerVals[i] = 0;
-		lastEncoderVals[i] = 0;
-	}
-
 	this->joystick = joystick;
+	this->pdp = pdp;
+	reset();
 }
 
 Drive::~Drive()
@@ -132,5 +126,8 @@ void Drive::reset()
 	for(unsigned i = 0; i < DriveMotors::NUM_DRIVE_MOTORS; ++i)
 	{
 		lastPowerVals[i] = 0;
+		lastEncoderVals[i] = encoders[i]->GetRaw();
+		motorControllers[i]->Set(0);
 	}
+	lastRunTimestamp = getTimestampMicros() - drivePeriod;
 }
