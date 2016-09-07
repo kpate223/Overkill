@@ -7,6 +7,8 @@
 
 #include <Drive.h>
 
+#include <iostream>
+
 Drive::Drive(Joystick *joystick)
 {
 	for(unsigned i = 0; i < DriveMotors::NUM_DRIVE_MOTORS; ++i)
@@ -43,28 +45,16 @@ void Drive::update()
 	float forwardSpeed = -joystick->GetRawAxis(JoystickAxes::DriveForward);
 	float turnSpeed = joystick->GetRawAxis(JoystickAxes::DriveTurn);
 
-	if(abs(forwardSpeed) < 0.05)
+	if(fabs(forwardSpeed) < 0.05)
 		forwardSpeed = 0;
 
-	if(abs(turnSpeed) < 0.05)
+	if(fabs(turnSpeed) < 0.05)
 		turnSpeed = 0;
 
-	std::cout << "forwardSpeed " << forwardSpeed << std::endl;
-	std::cout << "turnSpeed " << turnSpeed << std::endl;
-
-	//float leftSpeed = constrain(forwardSpeed + turnSpeed, -1, 1);
-	//float rightSpeed = -constrain(forwardSpeed - turnSpeed, -1, 1);
-
-	float leftSpeed = (forwardSpeed + turnSpeed);
-	float rightSpeed = -(forwardSpeed - turnSpeed);
-
-	std::cout << "leftSpeed " << leftSpeed << std::endl;
-	std::cout << "rightSpeed " << rightSpeed << std::endl;
+	float leftSpeed = constrain(forwardSpeed + turnSpeed, -1, 1);
+	float rightSpeed = -constrain(forwardSpeed - turnSpeed, -1, 1);
 
 	bool halfSpeed = joystick->GetRawButton(JoystickButtons::DriveHalfSpeed);
-
-	std::cout << "leftSpeed " << leftSpeed << std::endl;
-	std::cout << "rightSpeed " << rightSpeed << std::endl;
 
 	if(halfSpeed)
 	{
@@ -77,17 +67,12 @@ void Drive::update()
 		rightSpeed = map(rightSpeed, -1, 1, -maxSpeed, maxSpeed);
 	}
 
-	std::cout << "leftSpeed " << leftSpeed << std::endl;
-	std::cout << "rightSpeed " << rightSpeed << std::endl;
-
-
 	int encoderVals[DriveMotors::NUM_DRIVE_MOTORS];
 	int motorSpeeds[DriveMotors::NUM_DRIVE_MOTORS];
 
 	for(unsigned i = 0; i < DriveMotors::NUM_DRIVE_MOTORS; ++i)
 	{
 		encoderVals[i] = encoders[i]->GetRaw();
-//		std::cout << "enc[" << i << "] = " << encoderVals[i] << std::endl;
 	}
 
 	float speedErrorValues[DriveMotors::NUM_DRIVE_MOTORS];
@@ -96,7 +81,6 @@ void Drive::update()
 	{
 		motorSpeeds[i] = encoderVals[i] - lastEncoderVals[i];
 		lastEncoderVals[i] = encoderVals[i];
-//		std::cout << "speed[" << i << "] = " << motorSpeeds[i] << std::endl;
 	}
 
 /*
@@ -136,6 +120,8 @@ void Drive::update()
 		{
 			speedErrorValues[i] = leftSpeed - motorSpeeds[i];
 		}
+
+		std::cout << "speedError " << i << "   " << speedErrorValues[i] << std::endl;
 
 		lastPowerVals[i] += speedErrorValues[i] * kIntegral;
 		lastPowerVals[i] = constrain(lastPowerVals[i], -1.1, 1.1); // Allow above 1 to see if motor is saturating

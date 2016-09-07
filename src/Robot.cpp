@@ -3,9 +3,7 @@
 #include <Manipulator.h>
 #include <Safety.h>
 
-/**
- * 28750X18M eugen
- */
+//28750X18M
 
 class Robot: public SampleRobot
 {
