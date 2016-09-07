@@ -3,6 +3,10 @@
 #include <Manipulator.h>
 #include <Safety.h>
 
+/**
+ * 28750X18M eugen
+ */
+
 class Robot: public SampleRobot
 {
 	Joystick controller;

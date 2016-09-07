@@ -124,7 +124,9 @@ inline uint32_t getTimestampMicros()
  */
 inline float constrain(float n, float lower, float upper)
 {
-	return std::max(lower, std::min(n, upper));
+	if (n > upper) n = upper;
+	if (n < lower) n = lower;
+	return n;
 }
 
 /**

@@ -49,10 +49,22 @@ void Drive::update()
 	if(abs(turnSpeed) < 0.05)
 		turnSpeed = 0;
 
-	float leftSpeed = constrain(forwardSpeed + turnSpeed, -1, 1);
-	float rightSpeed = -constrain(forwardSpeed - turnSpeed, -1, 1);
+	std::cout << "forwardSpeed " << forwardSpeed << std::endl;
+	std::cout << "turnSpeed " << turnSpeed << std::endl;
+
+	//float leftSpeed = constrain(forwardSpeed + turnSpeed, -1, 1);
+	//float rightSpeed = -constrain(forwardSpeed - turnSpeed, -1, 1);
+
+	float leftSpeed = (forwardSpeed + turnSpeed);
+	float rightSpeed = -(forwardSpeed - turnSpeed);
+
+	std::cout << "leftSpeed " << leftSpeed << std::endl;
+	std::cout << "rightSpeed " << rightSpeed << std::endl;
 
 	bool halfSpeed = joystick->GetRawButton(JoystickButtons::DriveHalfSpeed);
+
+	std::cout << "leftSpeed " << leftSpeed << std::endl;
+	std::cout << "rightSpeed " << rightSpeed << std::endl;
 
 	if(halfSpeed)
 	{
@@ -64,6 +76,10 @@ void Drive::update()
 		leftSpeed = map(leftSpeed, -1, 1, -maxSpeed, maxSpeed);
 		rightSpeed = map(rightSpeed, -1, 1, -maxSpeed, maxSpeed);
 	}
+
+	std::cout << "leftSpeed " << leftSpeed << std::endl;
+	std::cout << "rightSpeed " << rightSpeed << std::endl;
+
 
 	int encoderVals[DriveMotors::NUM_DRIVE_MOTORS];
 	int motorSpeeds[DriveMotors::NUM_DRIVE_MOTORS];
@@ -83,6 +99,7 @@ void Drive::update()
 //		std::cout << "speed[" << i << "] = " << motorSpeeds[i] << std::endl;
 	}
 
+/*
 	if(!joystick->GetRawButton(JoystickButtons::DriveOverride))
 	{
 		// Perform motor saturation compensation by changing the desired speeds if a motor is saturated
@@ -107,6 +124,7 @@ void Drive::update()
 		leftSpeed *= ratio;
 		rightSpeed *= ratio;
 	}
+*/
 
 	for(unsigned i = 0; i < DriveMotors::NUM_DRIVE_MOTORS; ++i)
 	{
