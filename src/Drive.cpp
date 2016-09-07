@@ -83,7 +83,6 @@ void Drive::update()
 		lastEncoderVals[i] = encoderVals[i];
 	}
 
-/*
 	if(!joystick->GetRawButton(JoystickButtons::DriveOverride))
 	{
 		// Perform motor saturation compensation by changing the desired speeds if a motor is saturated
@@ -103,12 +102,15 @@ void Drive::update()
 					adjLeftSpeed = motorSpeeds[i];
 			}
 		}
-		float ratio = std::min(adjLeftSpeed / leftSpeed, adjRightSpeed / rightSpeed);
+		float ratioLeft = (leftSpeed == 0) ? 1 : (adjLeftSpeed / leftSpeed);
+		float ratioRight = (rightSpeed == 0) ? 1 : (adjRightSpeed / rightSpeed);
+		float ratio = std::min(ratioLeft, ratioRight);
 		ratio = constrain(ratio, -1, 1);
+		std::cout << "ratio " << ratio << std::endl;
 		leftSpeed *= ratio;
 		rightSpeed *= ratio;
 	}
-*/
+
 
 	for(unsigned i = 0; i < DriveMotors::NUM_DRIVE_MOTORS; ++i)
 	{
