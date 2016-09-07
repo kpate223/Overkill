@@ -102,11 +102,10 @@ void Drive::update()
 					adjLeftSpeed = motorSpeeds[i];
 			}
 		}
-		float ratioLeft = (leftSpeed == 0) ? 1 : (adjLeftSpeed / leftSpeed);
-		float ratioRight = (rightSpeed == 0) ? 1 : (adjRightSpeed / rightSpeed);
-		float ratio = std::min(ratioLeft, ratioRight);
+		adjLeftSpeed = (leftSpeed == 0) ? 1 : (adjLeftSpeed / leftSpeed);
+		adjRightSpeed = (rightSpeed == 0) ? 1 : (adjRightSpeed / rightSpeed);
+		float ratio = std::min(adjLeftSpeed, adjRightSpeed);
 		ratio = constrain(ratio, -1, 1);
-		std::cout << "ratio " << ratio << std::endl;
 		leftSpeed *= ratio;
 		rightSpeed *= ratio;
 	}
@@ -122,9 +121,6 @@ void Drive::update()
 		{
 			speedErrorValues[i] = leftSpeed - motorSpeeds[i];
 		}
-
-		std::cout << "speedError " << i << "   " << speedErrorValues[i] << std::endl;
-
 		lastPowerVals[i] += speedErrorValues[i] * kIntegral;
 		lastPowerVals[i] = constrain(lastPowerVals[i], -1.1, 1.1); // Allow above 1 to see if motor is saturating
 		motorControllers[i]->Set(constrain(lastPowerVals[i], -1, 1));
