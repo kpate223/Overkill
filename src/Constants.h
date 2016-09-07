@@ -22,7 +22,7 @@ enum JoystickAxes
 
 enum JoystickButtons
 {
-	DriveHalfSpeed = 5,
+	DriveFullSpeed = 5,
 	DriveOverride = 6,
 };
 

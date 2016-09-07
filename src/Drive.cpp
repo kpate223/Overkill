@@ -48,17 +48,15 @@ void Drive::update()
 	float leftSpeed = constrain(forwardSpeed + turnSpeed, -1, 1);
 	float rightSpeed = -constrain(forwardSpeed - turnSpeed, -1, 1);
 
-	bool halfSpeed = joystick->GetRawButton(JoystickButtons::DriveHalfSpeed);
-
-	if(halfSpeed)
-	{
-		leftSpeed = map(leftSpeed, -1, 1, -maxSpeed / 2, maxSpeed / 2);
-		rightSpeed = map(rightSpeed, -1, 1, -maxSpeed / 2, maxSpeed / 2);
-	}
-	else
+	if(joystick->GetRawButton(JoystickButtons::DriveFullSpeed))
 	{
 		leftSpeed = map(leftSpeed, -1, 1, -maxSpeed, maxSpeed);
 		rightSpeed = map(rightSpeed, -1, 1, -maxSpeed, maxSpeed);
+	}
+	else // half speed
+	{
+		leftSpeed = map(leftSpeed, -1, 1, -maxSpeed / 2, maxSpeed / 2);
+		rightSpeed = map(rightSpeed, -1, 1, -maxSpeed / 2, maxSpeed / 2);
 	}
 
 	int encoderVals[DriveMotors::NUM_DRIVE_MOTORS];
